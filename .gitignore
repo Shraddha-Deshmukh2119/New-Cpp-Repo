@@ -1,4 +1,7 @@
+# Data files (not CMakeLists.txt)
 *.txt
+!CMakeLists.txt
+!**/CMakeLists.txt
 *.dat
 *.exe
 build/
