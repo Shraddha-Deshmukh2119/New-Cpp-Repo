@@ -12,12 +12,12 @@ public:
     Client(const std::string &ipAddr = "127.0.0.1", int port = 7777) : m_ipAddress(ipAddr), m_port(port) {}
     ~Client();
 
-    bool start();
+    virtual bool start();
 
-    int Send(const std::string& str) const;
-    int Send(const int& var) const;
-    int Send(const double& var) const;
-    int Rec(std::string& receivingString);
+    virtual int Send(const std::string& str) const;
+    virtual int Send(const int& var) const;
+    virtual int Send(const double& var) const;
+    virtual int Rec(std::string& receivingString);
 
 private:
     WSAData wsaData;

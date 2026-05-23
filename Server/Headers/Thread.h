@@ -37,10 +37,10 @@ public:
     std::string getActivity();
     void closeClient();
  
-    int Send(const std::string& str) const;
-    int Send(const int& var) const;
-    int Send(const double& var) const;
-    int Rec(std::string& receivingString);
+    virtual int Send(const std::string& str) const;
+    virtual int Send(const int& var) const;
+    virtual int Send(const double& var) const;
+    virtual int Rec(std::string& receivingString);
 
 
 private:

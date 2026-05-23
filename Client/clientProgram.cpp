@@ -2,7 +2,11 @@
 #include <iomanip>
 #include <conio.h>
 #include <string>
-#include "myHeader.h"
+#include "Headers/Client.h"
+#include "Headers/Person.h"
+#include "Headers/Customer.h"
+#include "Headers/Employee.h"
+#include "Headers/Admin.h"
 using namespace std;
 
 int main()

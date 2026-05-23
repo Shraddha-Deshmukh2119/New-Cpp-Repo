@@ -22,11 +22,11 @@ class Customer;
 // class Admin;
 
 // Non-member functions and variables:
-void welcome(void)
+inline void welcome(void)
 {
     cout << setw(60) << "WELCOME TO MSM GROCERY CENTER!" << endl << endl;
 }
-void heading(const string& head)
+inline void heading(const string& head)
 {
     cout << setw(40) << "" << head << endl << endl;
 }

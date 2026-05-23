@@ -3,11 +3,12 @@
 
 class Customer: public Person
 {
+protected:
     void signup();
     void home() override;
     void complain();
 
-    public:
-        Customer(Thread& server) : Person(server) {};
-        void start();
+public:
+    Customer(Thread& server) : Person(server) {}
+    void start();
 };

@@ -1,4 +1,8 @@
-#include "myHeader.h"
+#include "Headers/Server.h"
+#include "Headers/Person.h"
+#include "Headers/Customer.h"
+#include "Headers/Employee.h"
+#include "Headers/Admin.h"
 using namespace std;
 
 void PROGRAM(Thread&);
