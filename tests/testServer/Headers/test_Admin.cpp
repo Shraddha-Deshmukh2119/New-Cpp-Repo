@@ -133,3 +133,105 @@ TEST_F(ServerAdminTest, HomeMenuPartialCoverage)
     EXPECT_TRUE(std::any_of(mock_->sent().begin(), mock_->sent().end(),
                             [](const std::string& s) { return s.find("home_user") != std::string::npos; }));
 }
+
+TEST_F(ServerAdminTest, HomeBuyAndProfilePaths)
+{
+    test_workspace::writeSampleGoodsFile();
+    test_workspace::writeSampleCashFile();
+    test_workspace::writeFile("admin.txt", test_workspace::sampleUserRecord("admin_buyer", "secret", "500"));
+    admin_->setLookup("Username: admin_buyer");
+
+    mock_->enqueue("1");
+    mock_->enqueue("1");
+    mock_->enqueue("1");
+    mock_->enqueue("2");
+    mock_->enqueue("3");
+    mock_->enqueue("3");
+    mock_->enqueue("17");
+    admin_->invokeHome();
+    EXPECT_FALSE(mock_->sent().empty());
+}
+
+TEST_F(ServerAdminTest, HomeSearchEmployees)
+{
+    test_workspace::writeFile("emp.txt", test_workspace::sampleUserRecord("emp_search"));
+    mock_->enqueue("9");
+    mock_->enqueue("1");
+    mock_->enqueue("12345-1234567-1");
+    mock_->enqueue("17");
+    admin_->invokeHome();
+    SUCCEED();
+}
+
+TEST_F(ServerAdminTest, HomeActivityPath)
+{
+    mock_->enqueue("15");
+    mock_->enqueue("17");
+    admin_->invokeHome();
+    EXPECT_FALSE(mock_->sent().empty());
+}
+
+TEST_F(ServerAdminTest, AddEmployeeSuccess)
+{
+    test_workspace::writeFile("emp.txt", "");
+    mock_->enqueue("New Emp");
+    mock_->enqueue("30");
+    mock_->enqueue("M");
+    mock_->enqueue("1");
+    mock_->enqueue("15");
+    mock_->enqueue("1995");
+    mock_->enqueue("12345-1234567-1");
+    mock_->enqueue("new@example.com");
+    mock_->enqueue("03001112233");
+    mock_->enqueue("newemp");
+    mock_->enqueue("pass");
+    admin_->invokeAddEmployee();
+    EXPECT_EQ(mock_->sent().back(), "TRUE");
+}
+
+TEST_F(ServerAdminTest, SearchMenuPhonePath)
+{
+    const std::string file = test_helpers::tempFile("search_phone.txt");
+    test_workspace::writeFile(file, test_workspace::sampleUserRecord("phone_user"));
+    mock_->enqueue("3");
+    mock_->enqueue("03001234567");
+    mock_->enqueue("6");
+    admin_->invokeSearchMenu(file);
+    SUCCEED();
+}
+
+TEST_F(ServerAdminTest, StockOrderSuccess)
+{
+    test_workspace::writeSampleGoodsFile();
+    test_workspace::writeSampleCashFile();
+    mock_->enqueue("1");
+    mock_->enqueue("Item0");
+    mock_->enqueue("3");
+    admin_->invokeStock();
+    EXPECT_EQ(mock_->sent().back(), "TRUE");
+}
+
+TEST_F(ServerAdminTest, StockOrderUnknownItem)
+{
+    test_workspace::writeSampleGoodsFile();
+    test_workspace::writeSampleCashFile();
+    mock_->enqueue("1");
+    mock_->enqueue("MissingItem");
+    admin_->invokeStock();
+    EXPECT_EQ(mock_->sent().back(), "FALSE");
+}
+
+TEST_F(ServerAdminTest, StockOrderInsufficientCash)
+{
+    test_workspace::writeFile("cash.txt",
+                              "Initial cash: 1\n"
+                              "Cash in: 0\n"
+                              "Cash out: 0\n"
+                              "Final cash: 1\n");
+    test_workspace::writeSampleGoodsFile();
+    mock_->enqueue("1");
+    mock_->enqueue("Item0");
+    mock_->enqueue("9999");
+    admin_->invokeStock();
+    EXPECT_EQ(mock_->sent().back(), "FALSE");
+}

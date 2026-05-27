@@ -38,8 +38,11 @@ set(TEST_CLIENT_SOURCES
     testClient/Headers/test_Cash.cpp
     testClient/Headers/test_Client.cpp
     testClient/Headers/test_Person.cpp
+    testClient/Headers/test_Person_flows.cpp
     testClient/Headers/test_Customer.cpp
+    testClient/Headers/test_Customer_flows.cpp
     testClient/Headers/test_Employee.cpp
+    testClient/Headers/test_Employee_flows.cpp
     testClient/Headers/test_Admin.cpp
 )
 
@@ -48,6 +51,7 @@ set(TEST_SERVER_SOURCES
     testServer/Headers/test_Server.cpp
     testServer/Headers/test_Thread.cpp
     testServer/Headers/test_Person.cpp
+    testServer/Headers/test_Person_flows.cpp
     testServer/Headers/test_Customer.cpp
     testServer/Headers/test_Employee.cpp
     testServer/Headers/test_Admin.cpp

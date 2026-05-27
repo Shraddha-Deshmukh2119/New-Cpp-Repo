@@ -1,17 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "Customer.h"
 #include "MockClient.h"
 #include "stdin_redirect.h"
-
-class TestableClientCustomer : public Customer
-{
-public:
-    explicit TestableClientCustomer(MockClient& client) : Customer(client) {}
-
-    void invokeStartBack() { start(); }
-    void invokeHomeLogout() { home(); }
-};
+#include "test_Customer.h"
 
 TEST(ClientCustomerTest, CanConstruct)
 {

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Online Shopping System
 
 Our project is an online shopping system which utilizes the abilities of C++ language while abiding by the rules and regulations of
@@ -125,3 +126,6 @@ _May, 2021_
 - github : [@saad0510](https://www.github.com/saad0510)
 - email  : k200161@nu.edu.pk or ayyansaad46@gmail.com
 
+=======
+# New-Cpp-Repo
+>>>>>>> 760ce4af15191b1de9d63e4177e55a3ed911fa45

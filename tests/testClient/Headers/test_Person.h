@@ -17,4 +17,48 @@ public:
     bool testCheckEmail(const std::string& email) { return check_email(email); }
     bool testCheckPhone(const std::string& phone) { return check_phone_num(phone); }
     bool testConsistency(const Date& dob, const int& age) { return consistency(dob, age); }
+
+    void invokeBuy() { buy(); }
+    void invokeLogin() { login(); }
+    void invokeProfile() { profile(); }
+    bool invokeInput() { return input(); }
+
+    // Single-attempt login (production login() retries recursively).
+    void invokeLoginOnce()
+    {
+        system("cls");
+        heading("LOGIN");
+        cout << " Username : ";
+        getline(cin, username);
+        fflush(stdin);
+
+        cout << " Password : ";
+        char c;
+        password.clear();
+        while (1)
+        {
+            c = getch();
+            if (c == 13)
+                break;
+            cout << "*";
+            password.push_back(c);
+        }
+
+        (*client).Send(username);
+        (*client).Send(password);
+
+        string error;
+        (*client).Rec(error);
+
+        if (error == "Correct")
+        {
+            home();
+            return;
+        }
+
+        if (error == "Incorrect-User")
+            cout << "\n Incorrect username" << endl;
+        if (error == "Incorrect-Pass")
+            cout << "\n Incorrect password" << endl;
+    }
 };

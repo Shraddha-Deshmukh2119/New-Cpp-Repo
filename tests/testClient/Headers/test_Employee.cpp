@@ -1,17 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "Employee.h"
 #include "MockClient.h"
 #include "stdin_redirect.h"
-
-class TestableClientEmployee : public Employee
-{
-public:
-    explicit TestableClientEmployee(MockClient& client) : Employee(client) {}
-
-    void invokeHomeExit() { home(); }
-    void invokeComplainExit() { complain(); }
-};
+#include "test_Employee.h"
 
 TEST(ClientEmployeeTest, CanConstruct)
 {

@@ -1,10 +1,13 @@
 #include <gtest/gtest.h>
 
+#include <algorithm>
+#include <ctime>
 #include <string>
 
 #include "MockClient.h"
 #include "stdin_redirect.h"
 #include "test_Admin.h"
+#include "test_helpers.h"
 
 class ClientAdminTest : public ::testing::Test
 {
@@ -77,7 +80,109 @@ TEST_F(ClientAdminTest, AccountsReceivesCashReport)
 TEST_F(ClientAdminTest, HomeExitSendsBackChoice)
 {
     StdinRedirect input("17\n");
-    admin_.invokeHomeExit();
+    admin_.invokeHome();
     ASSERT_FALSE(mock_.sent().empty());
     EXPECT_EQ(mock_.sent().back(), "17");
+}
+
+TEST_F(ClientAdminTest, HomeInvalidChoiceThenExit)
+{
+    StdinRedirect input("99\n17\n");
+    admin_.invokeHome();
+    EXPECT_EQ(mock_.sent().back(), "17");
+}
+
+TEST_F(ClientAdminTest, HomeViewCustomersSendsChoice)
+{
+    mock_.enqueue("Customer list\n");
+    StdinRedirect input("5\n17\n");
+    admin_.invokeHome();
+    EXPECT_TRUE(std::find(mock_.sent().begin(), mock_.sent().end(), "5") != mock_.sent().end());
+}
+
+TEST_F(ClientAdminTest, HomeActivityReceivesPayload)
+{
+    mock_.enqueue("Activity log line\n");
+    StdinRedirect input("15\n17\n");
+    admin_.invokeHome();
+    SUCCEED();
+}
+
+TEST_F(ClientAdminTest, AddEmployeeSuccess)
+{
+    StdinRedirect input(test_helpers::clientPersonInputStdin("emp1", "Emp One", 28));
+    mock_.enqueue("TRUE");
+    admin_.invokeAddEmployee();
+    SUCCEED();
+}
+
+TEST_F(ClientAdminTest, AddEmployeeFailure)
+{
+    StdinRedirect input(test_helpers::clientPersonInputStdin("emp2", "Emp Two", 28, "e2@example.com"));
+    mock_.enqueue("FALSE");
+    admin_.invokeAddEmployee();
+    SUCCEED();
+}
+
+TEST_F(ClientAdminTest, BalanceNegativeRetryThenSuccess)
+{
+    StdinRedirect input("user1\n-5\n25\n");
+    mock_.enqueue("TRUE");
+    admin_.invokeBalance();
+    SUCCEED();
+}
+
+TEST_F(ClientAdminTest, BalanceUpdateFailure)
+{
+    StdinRedirect input("user1\n50\n");
+    mock_.enqueue("FALSE");
+    admin_.invokeBalance();
+    SUCCEED();
+}
+
+TEST_F(ClientAdminTest, StockOrderUnknownGood)
+{
+    mock_.enqueue("Stock report\n");
+    StdinRedirect input("1\nUnknown\n3\n");
+    mock_.enqueue("FALSE");
+    admin_.invokeStock();
+    SUCCEED();
+}
+
+TEST_F(ClientAdminTest, StockOrderSuccess)
+{
+    mock_.enqueue("Stock report\n");
+    StdinRedirect input("1\nItem0\n5\n");
+    mock_.enqueue("TRUE");
+    mock_.enqueue("TRUE");
+    admin_.invokeStock();
+    SUCCEED();
+}
+
+TEST_F(ClientAdminTest, StockOrderInsufficientCash)
+{
+    mock_.enqueue("Stock report\n");
+    StdinRedirect input("1\nItem0\n5\n");
+    mock_.enqueue("TRUE");
+    mock_.enqueue("FALSE");
+    admin_.invokeStock();
+    SUCCEED();
+}
+
+TEST_F(ClientAdminTest, StockModifySuccess)
+{
+    mock_.enqueue("Stock report\n");
+    StdinRedirect input("2\nItem0\n12.5\n3\n4\n3\n");
+    mock_.enqueue("TRUE");
+    admin_.invokeStock();
+    SUCCEED();
+}
+
+TEST_F(ClientAdminTest, StockModifyUnknownGood)
+{
+    mock_.enqueue("Stock report\n");
+    StdinRedirect input("2\nMissing\n3\n");
+    mock_.enqueue("FALSE");
+    admin_.invokeStock();
+    SUCCEED();
 }

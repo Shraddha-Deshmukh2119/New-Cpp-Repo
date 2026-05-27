@@ -15,5 +15,6 @@ public:
     void invokeBalance() { balance(); }
     void invokeStock() { stock(); }
     void invokeAccounts() { accounts(); }
-    void invokeHomeExit() { home(); }
+    void invokeHome() { home(); }
+    void invokeAddEmployee() { add_employee(); }
 };

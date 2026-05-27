@@ -16,6 +16,7 @@ public:
     void invokeBalance(const std::string& fileName) { balance(fileName); }
     void invokeAccounts() { accounts(); }
     void invokeStock() { stock(); }
+    void invokeAddEmployee() { add_employee(); }
 
     void setLookup(const std::string& value) { lookup = value; }
 };

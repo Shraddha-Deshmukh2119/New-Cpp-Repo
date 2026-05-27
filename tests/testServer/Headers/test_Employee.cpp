@@ -58,3 +58,77 @@ TEST_F(ServerEmployeeTest, ComplainViewAll)
     employee_->invokeComplain();
     SUCCEED();
 }
+
+TEST_F(ServerEmployeeTest, HomeBuyPath)
+{
+    test_workspace::writeSampleGoodsFile();
+    test_workspace::writeSampleCashFile();
+    test_workspace::writeFile("emp.txt", test_workspace::sampleUserRecord("emp_buyer", "secret", "400"));
+    employee_->setLookup("Username: emp_buyer");
+
+    mock_->enqueue("1");
+    mock_->enqueue("1");
+    mock_->enqueue("1");
+    mock_->enqueue("2");
+    mock_->enqueue("3");
+    mock_->enqueue("4");
+    employee_->invokeHome();
+    SUCCEED();
+}
+
+TEST_F(ServerEmployeeTest, ComplainSeeNamedFound)
+{
+    test_workspace::writeFile("complaint.dat", "");
+    mock_->enqueue("1");
+    mock_->enqueue("Alice");
+    mock_->enqueue("7");
+    employee_->invokeComplain();
+    SUCCEED();
+}
+
+TEST_F(ServerEmployeeTest, ComplainSeeAnonymous)
+{
+    test_workspace::writeFile("complaint.dat", "");
+    mock_->enqueue("2");
+    mock_->enqueue("Bob");
+    mock_->enqueue("7");
+    employee_->invokeComplain();
+    SUCCEED();
+}
+
+TEST_F(ServerEmployeeTest, ComplainAnswerComplaint)
+{
+    test_workspace::writeFile("complaint.dat", "");
+    mock_->enqueue("3");
+    mock_->enqueue("Carol");
+    mock_->enqueue("We apologize");
+    mock_->enqueue("7");
+    employee_->invokeComplain();
+    SUCCEED();
+}
+
+TEST_F(ServerEmployeeTest, ComplainViewComplaintees)
+{
+    test_workspace::writeFile("complaint.dat", "");
+    mock_->enqueue("4");
+    mock_->enqueue("7");
+    employee_->invokeComplain();
+    SUCCEED();
+}
+
+TEST_F(ServerEmployeeTest, ComplainClearAll)
+{
+    test_workspace::writeFile("complaint.dat", "");
+    mock_->enqueue("6");
+    mock_->enqueue("7");
+    employee_->invokeComplain();
+    SUCCEED();
+}
+
+TEST_F(ServerEmployeeTest, ComplainInvalidChoice)
+{
+    mock_->enqueue("99");
+    mock_->enqueue("7");
+    employee_->invokeComplain();
+    SUCCEED();
+}

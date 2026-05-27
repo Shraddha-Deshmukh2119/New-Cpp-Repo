@@ -62,10 +62,10 @@ inline void writeSampleGoodsFile()
 inline void writeSampleCashFile()
 {
     writeFile("cash.txt",
-                "Initial: 1000\n"
-                "In: 500\n"
-                "Out: 200\n"
-                "Final: 1300\n");
+                "Initial cash: 1000\n"
+                "Cash in: 500\n"
+                "Cash out: 200\n"
+                "Final cash: 1300\n");
 }
 
 } // namespace test_workspace
